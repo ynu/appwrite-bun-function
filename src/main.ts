@@ -11,7 +11,7 @@ export default async ({ req, res, log, error }: any) => {
   //    .setKey(Bun.env["APPWRITE_API_KEY"]);
 
   // You can log messages to the console
-  log("Hello, another updated Logs!");
+  log("Hello, updated Logs!");
 
   // If something goes wrong, log an error
   error("Hello, Errors!");
