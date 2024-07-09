@@ -33,11 +33,17 @@ Sample `200` Response:
 }
 ```
 
+## Local development
+
+Just use [`entrypoint.ts`](./entrypoint.ts) as the start script by running `bun entrypoint.ts`. 
+
+You can also set breakpoints and debug in IDE like [vscode](https://marketplace.visualstudio.com/items?itemName=oven.bun-vscode)/[idea](https://github.com/oven-sh/bun/issues/5720).
+
 ## ⚙️ Configuration
 
 | Setting           | Value         |
 | ----------------- | ------------- |
-| Runtime           | Bun (1.0)     |
+| Runtime           | Bun (1.1)     |
 | Entrypoint        | `src/main.ts` |
 | Build Commands    | `bun install` |
 | Permissions       | `any`         |
