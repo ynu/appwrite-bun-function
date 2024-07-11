@@ -1,5 +1,34 @@
 import { Client, Databases } from "node-appwrite";
 import process from "process";
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.align(),
+    winston.format.timestamp({ format: 'YYYY-MM-DD T hh:mm:ss.sss A' }),
+    winston.format.printf(({ level, message, timestamp, label }) => {
+      return `${level.toUpperCase()} | ${timestamp} | ${message}`;
+    })
+  ),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //
+    // - Write all logs with importance level of `error` or less to `error.log`
+    // - Write all logs with importance level of `info` or less to `combined.log`
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+
+//
+// If we're not in production then log to the `console` with the format:
+// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+//
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console());
+}
 
 const { APPWRITE_ENDPOINT, APPWRITE_FUNCTION_PROJECT_ID, APPWRITE_API_KEY, APPWRITE_DATABASE_ID, APPWRITE_COLLECTION_ID } = process.env;
 
@@ -20,9 +49,23 @@ async function list_documents(client: Client, log) {
 // This is your Appwrite function
 // It's executed each time we get a request
 export default async ({ req, res, log, error }: { req: REQ_TYPE; res: RES_TYPE; log: LOG_TYPE; error: ERROR_TYPE }) => {
+
+  /**
+   * The following console.log maybe async, these log message will print after the log and error the runtime provided.
+   */
   // show log message for info, warn, error, log in console
-  for(const logger of ['debug', 'info', 'warn', 'error', 'log']) {
-    console[logger](`This is console.${logger} message`);
+  for(const level of ['debug', 'info', 'warn', 'error', 'log']) {
+    console[level](`This is console.${level} message`);
+  }
+  
+  // show log message for winston, see https://github.com/winstonjs/winston?tab=readme-ov-file#using-logging-levels
+  const logging_levels = { emerg: 0, alert: 1, crit: 2, error: 3, warning: 4, notice: 5, info: 6, debug: 7 };
+  for(const level of Object.keys(logging_levels)) {
+    try {
+      logger[level](`This is logger.${level} message`);
+    } catch (error) {
+      console.error(`logger.${level} error with`, error);
+    }
   }
 
   // Why not try the Appwrite SDK?
