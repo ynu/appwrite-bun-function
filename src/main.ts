@@ -1,6 +1,24 @@
 import { Client, Databases } from "node-appwrite";
 import process from "process";
 import winston from 'winston';
+import Transport from 'winston-transport';
+
+class AppwriteConsole extends Transport {
+  constructor(opts) {
+    super(opts);
+  }
+
+  log(info, callback) {
+    setImmediate(() => {
+      this.emit('logged', info);
+    });
+    console.log(`[${info.level}]: ${info.message}`)
+
+    if (callback) {
+      callback(); // eslint-disable-line callback-return
+    }
+  }
+};
 
 const logger = winston.createLogger({
   level: 'info',
@@ -27,7 +45,7 @@ const logger = winston.createLogger({
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 //
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console());
+  logger.add(new AppwriteConsole({}));
 }
 
 const { APPWRITE_ENDPOINT, APPWRITE_FUNCTION_PROJECT_ID, APPWRITE_API_KEY, APPWRITE_DATABASE_ID, APPWRITE_COLLECTION_ID } = process.env;
@@ -59,7 +77,7 @@ export default async ({ req, res, log, error }: { req: REQ_TYPE; res: RES_TYPE; 
   // }
   
   // show log message for winston, see https://github.com/winstonjs/winston?tab=readme-ov-file#using-logging-levels
-  const logging_levels = { emerg: 0, alert: 1, crit: 2, error: 3, warning: 4, notice: 5, info: 6, debug: 7 };
+  const logging_levels = { error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6 }
   for(const level of Object.keys(logging_levels)) {
     try {
       logger[level](`This is logger.${level} message`);
