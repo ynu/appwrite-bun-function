@@ -54,9 +54,9 @@ export default async ({ req, res, log, error }: { req: REQ_TYPE; res: RES_TYPE; 
    * The following console.log maybe async, these log message will print after the log and error the runtime provided.
    */
   // show log message for info, warn, error, log in console
-  for(const level of ['debug', 'info', 'warn', 'error', 'log']) {
-    console[level](`This is console.${level} message`);
-  }
+  // for(const level of ['debug', 'info', 'warn', 'error', 'log']) {
+  //   console[level](`This is console.${level} message`);
+  // }
   
   // show log message for winston, see https://github.com/winstonjs/winston?tab=readme-ov-file#using-logging-levels
   const logging_levels = { emerg: 0, alert: 1, crit: 2, error: 3, warning: 4, notice: 5, info: 6, debug: 7 };
