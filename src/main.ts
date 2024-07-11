@@ -64,7 +64,7 @@ export default async ({ req, res, log, error }: { req: REQ_TYPE; res: RES_TYPE; 
     try {
       logger[level](`This is logger.${level} message`);
     } catch (error) {
-      console.error(`logger.${level} error with`, error);
+      console.log(`logger.${level} error with`, error);
     }
   }
 
