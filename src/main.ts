@@ -20,6 +20,11 @@ async function list_documents(client: Client, log) {
 // This is your Appwrite function
 // It's executed each time we get a request
 export default async ({ req, res, log, error }: { req: REQ_TYPE; res: RES_TYPE; log: LOG_TYPE; error: ERROR_TYPE }) => {
+  // show log message for info, warn, error, log in console
+  for(const logger of ['debug', 'info', 'warn', 'error', 'log']) {
+    console[logger](`This is console.${logger} message`);
+  }
+
   // Why not try the Appwrite SDK?
   //
   const client = new Client()
